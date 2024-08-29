@@ -1,53 +1,54 @@
-export let cart = JSON.parse(localStorage.getItem('cart'));
+export let cart = JSON.parse
+(localStorage.getItem('cart'))
+ || 
+    [
+      {
+        productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
+        quantity: 2,
+      }, {
+        productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d',
+        quantity: 1
+      }
+    ];
 
-if(!cart){
-  [
-    {
-      productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
-      quantity: 2,
-    },
-    {
-      productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d',
-      quantity: 1
-    }
-  ];
+
+
+function saveToStore(){
+  localStorage.setItem('cart',JSON.
+    stringify(cart));
 }
 
 
-
-function saveToStorage(){
-  localStorage.setItem('cart', JSON.stringify(cart));
-};
-
 export function addToCart(productId){
 
-  let matchingItems;
+  const quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`);
+  const quantity = Number(quantitySelector.value);
 
-    cart.forEach((cartItem) => {
-      if(productId === cartItem.productId ){
-        matchingItems = cartItem;
-      }
-    });
-    const quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`);
-    const quantity = Number(quantitySelector.value);
+    let matchingItems;
 
-    if(matchingItems){
-      matchingItems.quantity += quantity;
-    }
-    else{
-      cart.push({
-        productId: productId,
-        quantity: 1
+      cart.forEach((cartItem) => {
+        if(productId === cartItem.productId ){
+          matchingItems = cartItem;
+        }
       });
-    }
 
-    saveToStorage();
-};
+      if(matchingItems){
+        matchingItems.quantity += quantity;
+      }
+      else{
+        cart.push({
+          productId:productId,
+          quantity:1
+        });
+      }
 
-export function removeFromCart(cartItem){
+    saveToStore();
+}
+
+export function removeFromCart(productId){
   const newCart = [];
 
-  cart.forEach((productId)=>{
+  cart.forEach((cartItem)=>{
     if(cartItem.productId !== productId){
       newCart.push(cartItem);
     }
@@ -55,5 +56,6 @@ export function removeFromCart(cartItem){
 
   cart = newCart;
 
-  saveToStorage();
-};
+  saveToStore();
+}
+

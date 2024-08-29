@@ -4,19 +4,20 @@ import {formatCurrency} from './utility/money.js';
 
 let cartSummaryHTML = '';
 
+let matchingProduct;
+
 cart.forEach((cartItem)=>{
   const productId = cartItem.productId;
 
-  let matchingProduct;
-
   products.forEach((product)=>{
-    if(productId === product.id){
+    if(product.id === productId){
       matchingProduct = product;
     }
   });
 
    cartSummaryHTML += `
-    <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
+    <div class="cart-item-container 
+      js-cart-item-container-${matchingProduct.id}">
         <div class="delivery-date">
           Delivery date: Tuesday, June 21
         </div>
@@ -39,7 +40,8 @@ cart.forEach((cartItem)=>{
               <span class="update-quantity-link link-primary">
                 Update
               </span>
-              <span class="delete-quantity-link link-primary js-delete-link" data-product-id = "${matchingProduct.id}">
+              <span class="delete-quantity-link link-primary js-delete-link" 
+              data-product-id = "${matchingProduct.id}">
                 Delete
               </span>
             </div>
@@ -94,7 +96,8 @@ cart.forEach((cartItem)=>{
   `;
 });
 
-document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;
+document.querySelector('.js-order-summary')
+.innerHTML = cartSummaryHTML;
 
 document.querySelectorAll('.js-delete-link')
 .forEach((link)=>{
@@ -102,7 +105,8 @@ document.querySelectorAll('.js-delete-link')
     const productId = link.dataset.productId;
     removeFromCart(productId);
 
-    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+    const container = document.querySelector(
+      `.js-cart-item-container-${productId}`);
     container.remove();
   });
 });
