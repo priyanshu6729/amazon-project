@@ -1,9 +1,25 @@
 import { renderOrderSummary } from "../../scripts/checkout/orderSummary";
 import { loadFromStorage } from "../../data/cart";
+import { loadProducts } from "../../data/products";
 
 describe('test suite: renderOrderSummary',() =>{
 it('displays the cart',()=>{
   document.querySelector('.js-test-container').innerHTML = `<div class='js-order-summary'></div>`;
+
+  beforeAll((done) =>{
+    loadProducts(() => {
+      done();
+    });
+  })
+
+  beforeEach(() => {
+    spyOn(localStorage,'setItem');
+
+    document.querySelector('.js-test-container').innerHTML = `
+      <div class = js-order-summary></div>
+      <div class = js-payment-summary></div>
+    `
+  })
 
   spyOn(localStorage,'getItem').and.callFake(() => {
     return JSON.stringify([
