@@ -1,4 +1,5 @@
-import {cart} from '../../data/cart.js';
+// import {cart} from '../../data/cart.js';
+import {cart, resetCart} from '../../data/cart.js';
 import {getProduct} from '../../data/products.js';
 import { getDeliveryOption } from '../../data/deliveryOptions.js';
 import formatCurrency from '../utility/money.js';
@@ -22,13 +23,18 @@ export function renderPaymentSummary(){
   const taxCents = totalBeforeTaxCents * 0.1;
   const totalCents = totalBeforeTaxCents + taxCents;
 
+  let cartQuantity = 0;
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
+
   const paymentSummaryHTML = 
   `<div class="payment-summary-title">
         Order Summary
       </div>
 
       <div class="payment-summary-row">
-        <div>Items (${cartItemQuantity}):</div>
+        <div>Items (${cartQuantity}):</div>
         <div class="payment-summary-money">$${formatCurrency(productPriceCents)}</div>
       </div>
 
@@ -77,6 +83,9 @@ export function renderPaymentSummary(){
       } catch(error) {
         console.log('Unexpected error !! Try again later.');
       }
+
+      // Extra feature: make the cart empty after creating an order.
+      resetCart();
 
       window.location.href = 'orders.html';
     });

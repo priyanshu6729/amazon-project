@@ -1,11 +1,12 @@
 import formatCurrency from "../scripts/utility/money.js";
 
-class Product {
+export class Product {
   id;
   image;
   name;
   rating;
   priceCents;
+  keywords;
  
   constructor (productDetails){
     this.id = productDetails.id;
@@ -13,6 +14,7 @@ class Product {
     this.name = productDetails.name;
     this.rating = productDetails.rating;
     this.priceCents = productDetails.priceCents;
+    this.keywords = productDetails.keywords;
   }
 
   getStarUrl() {
@@ -28,7 +30,7 @@ class Product {
   }
 }
 
-class Clothing extends Product{
+export class Clothing extends Product{
    sizeChartLink;
 
    constructor(productDetails){
@@ -42,6 +44,28 @@ class Clothing extends Product{
       </a>`;
     }
 };
+
+export class Appliance extends Product {
+  instructionsLink;
+  warrantyLink;
+
+  constructor(productDetails) {
+    super(productDetails);
+    this.instructionsLink = productDetails.instructionsLink;
+    this.warrantyLink = productDetails.warrantyLink;
+  }
+
+  extraInfoHTML() {
+    return `
+      <a href="${this.instructionsLink}" target="_blank">
+        Instructions
+      </a>
+      <a href="${this.warrantyLink}" target="_blank">
+        Warranty
+      </a>
+    `;
+  }
+}
 
 
 export function getProduct(productId){
@@ -66,6 +90,8 @@ export function loadProductsFetch() {
      products = productsData.map((productDetails) => {
        if(productDetails.type === 'clothing'){
         return new Clothing(productDetails);
+      } else if (productDetails.type === 'appliance') {
+        return new Appliance(productDetails);
        }
        return new Product(productDetails);
      });
@@ -83,6 +109,8 @@ export function loadProducts(fun) {
     products = JSON.parse(xhr.response).map((productDetails) => {
       if(productDetails.type === 'clothing'){
         return new Clothing(productDetails);
+      } else if (productDetails.type === 'appliance') {
+        return new Appliance(productDetails);
       }
       return new Product(productDetails);
     });
